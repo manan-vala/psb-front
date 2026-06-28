@@ -12,7 +12,7 @@ import { RiskTrendChart } from "./components/RiskTrendChart"
 import { ThreatMap } from "./components/ThreatMap"
 import { TransactionTable } from "./components/TransactionTable"
 import { useDemoEngine } from "./hooks/useDemoEngine"
-import { Shield } from "lucide-react"
+// import { Shield } from "lucide-react"
 import { BobIconPrimary } from "./components/icons/bob-icon-primary"
 import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-primary"
 
