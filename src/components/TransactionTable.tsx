@@ -4,7 +4,6 @@ import { ShieldCheck, ShieldX, AlertTriangle } from "lucide-react"
 
 export function TransactionTable({ transactions }: { transactions: Transaction[] }) {
   const formatTime = (ts: number) => new Date(ts).toLocaleTimeString("en-IN", { hour12: false })
-  const filteredTransactions = transactions.filter(tx => tx.action !== "ALLOW");
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden flex flex-col h-[400px]">
@@ -25,7 +24,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
             </tr>
           </thead>
           <tbody>
-            {filteredTransactions.map((tx, i) => {
+            {transactions.map((tx, i) => {
               const isBlock = tx.action === "BLOCK"
               const isStepUp = tx.action === "STEP_UP"
               
@@ -73,7 +72,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
               )
             })}
             
-            {filteredTransactions.length === 0 && (
+            {transactions.length === 0 && (
               <tr>
                 <td colSpan={6} className="text-center py-8 text-muted-foreground text-sm">
                   Waiting for transactions...
