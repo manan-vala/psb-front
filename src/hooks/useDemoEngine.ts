@@ -17,8 +17,8 @@ export function useDemoEngine() {
   const [stats, setStats] = useState<Stats>({ total: 1450, flagged: 24, blocked: 3, avgRisk: 12 })
   const [riskHistory, setRiskHistory] = useState<{ time: number, score: number }[]>([])
 
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([])
-  const bgIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const bgIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const clearTimeouts = () => {
     timeoutsRef.current.forEach(clearTimeout)
