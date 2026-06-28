@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import type { DemoPhase, RiskUpdate } from "@/types/risk"
-import { cn } from "@/lib/utils"
 import SvgWorldMap from "./icons/WorldMap"
 
 interface ThreatMapProps {
