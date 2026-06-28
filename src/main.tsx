@@ -7,6 +7,7 @@ import { Agentation } from "agentation"
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-    {import.meta.env.DEV && <Agentation />}
+    {/* {import.meta.env.DEV && <Agentation />} */}
+    {<Agentation />}
   </StrictMode>,
 )
