@@ -1,4 +1,4 @@
-import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts"
+import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts"
 import type { RiskAction } from "@/types/risk"
 import { SessionStatus } from "./SessionStatus"
 
@@ -25,12 +25,13 @@ export function RiskGauge({ riskScore, action }: RiskGaugeProps) {
       )}
       <p className="mb-2 text-sm text-muted-foreground z-10">Identity Risk Score</p>
       
-      <div className="relative z-10">
-        <RadialBarChart
-          width={200}
-          height={200}
-          innerRadius={70}
-          outerRadius={95}
+      <div className="relative z-10 w-full h-[200px] flex justify-center">
+        <ResponsiveContainer width="100%" height="100%">
+          <RadialBarChart
+            cx="50%"
+            cy="50%"
+            innerRadius="70%"
+            outerRadius="100%"
           data={data}
           startAngle={225}
           endAngle={-45}
@@ -51,7 +52,8 @@ export function RiskGauge({ riskScore, action }: RiskGaugeProps) {
             animationDuration={1500}
             animationEasing="ease-out"
           />
-        </RadialBarChart>
+          </RadialBarChart>
+        </ResponsiveContainer>
 
         <div className="absolute inset-0 flex flex-col items-center justify-center drop-shadow-md">
           <span className="text-5xl font-bold tabular-nums" style={{ color: scoreColor(riskScore) }}>

@@ -30,8 +30,8 @@ export default function App() {
       <main className="min-h-screen bg-background p-4 text-foreground sm:p-6 pb-20 pt-8">
         <header className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-orange-500/10 p-1.5 rounded-lg text-primary flex items-center justify-center">
-              <BobIconPrimary className="w-10 h-auto" />
+            <div className="bg-orange-500/10 p-2 rounded-lg text-primary flex items-center justify-center">
+              <BobIconPrimary className="w-14 h-auto" />
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">Aegis</h1>

@@ -125,30 +125,6 @@ export const DEMO_EVENTS = [
       dwellTimes: [2000, 3000, 1200, 500], // very fast transfer
       explanation: "Impossible travel (Delhi to Mumbai in 5 mins). Headless browser signatures detected. Immediate transfer attempt bypassed normal golden path.",
     }
-  },
-  {
-    delay: 38000, // +38s: New clean user
-    event: {
-      riskScore: 22,
-      action: "ALLOW" as RiskAction,
-      engines: { network: 15, device: 10, behavior: 20, journey: 15 },
-      flags: [],
-      sessionPath: ["Home"],
-      dwellTimes: [1500],
-      explanation: "New clean session started from trusted home network.",
-    }
-  },
-  {
-    delay: 42000, // +42s: New clean user login
-    event: {
-      riskScore: 25,
-      action: "ALLOW" as RiskAction,
-      engines: { network: 15, device: 10, behavior: 25, journey: 20 },
-      flags: [],
-      sessionPath: ["Home", "Login"],
-      dwellTimes: [1500, 4000],
-      explanation: "Normal login pattern. Typing biometrics match profile.",
-    }
   }
 ]
 

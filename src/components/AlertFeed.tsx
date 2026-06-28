@@ -26,18 +26,20 @@ function formatTime(ts: number) {
 }
 
 export function AlertFeed({ history }: AlertFeedProps) {
+  const filteredHistory = history.filter(event => event.action !== "ALLOW");
+
   return (
     <div className="rounded-xl border border-border bg-card p-4 h-[400px] flex flex-col">
       <p className="mb-3 text-sm font-medium text-muted-foreground border-b border-border/50 pb-2">Alert Feed</p>
 
       <div className="flex-1 space-y-2 overflow-y-auto pr-2">
-        {!history.length && (
+        {!filteredHistory.length && (
           <p className="text-sm text-muted-foreground text-center pt-8">
             Waiting for session data...
           </p>
         )}
 
-        {history.map((event, i) => {
+        {filteredHistory.map((event, i) => {
           const engine = detectEngine(event.flags)
           const isBlock = event.action === "BLOCK"
 

@@ -1,0 +1,14 @@
+const fs = require('fs');
+const path = 'C:\\Users\\manan\\.gemini\\antigravity\\brain\\eeef854e-95c3-40ff-affa-84937d43368a\\.system_generated\\steps\\218\\content.md';
+let content = fs.readFileSync(path, 'utf8');
+let svgStart = content.indexOf('<svg version="1.1"');
+let svgEnd = content.indexOf('</svg>') + 6;
+let svg = content.substring(svgStart, svgEnd);
+svg = svg.replace(/xmlns:xlink/g, 'xmlnsXlink');
+svg = svg.replace(/class="/g, 'className="');
+svg = svg.replace(/<svg version="1.1"/g, '<svg {...props} version="1.1"');
+svg = svg.replace(/width="784.077px"/g, '');
+svg = svg.replace(/height="458.627px"/g, '');
+const component = `import React from 'react';\nexport function WorldMap(props: React.SVGProps<SVGSVGElement>) {\n  return (\n    ${svg}\n  );\n}`;
+fs.writeFileSync('src/components/icons/WorldMap.tsx', component);
+console.log("Done");
