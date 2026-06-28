@@ -123,7 +123,7 @@ export const DEMO_EVENTS = [
       flags: ["VPN_DETECTED", "IMPOSSIBLE_TRAVEL", "PASTE_DETECTED", "SUPERHUMAN_TYPING_SPEED", "ML_ANOMALY_DETECTED", "HEADLESS_NAVIGATION", "GOLDEN_PATH_DEVIATION", "SPEEDRUN"],
       sessionPath: ["Home", "Login", "Dashboard", "Transfer"],
       dwellTimes: [2000, 3000, 1200, 500], // very fast transfer
-      explanation: "Impossible travel (Mumbai to Kyiv in 1h). Headless browser signatures detected. Immediate transfer attempt bypassed normal golden path.",
+      explanation: "Impossible travel (Delhi to Mumbai in 5 mins). Headless browser signatures detected. Immediate transfer attempt bypassed normal golden path.",
     }
   },
   {
@@ -155,10 +155,10 @@ export const DEMO_EVENTS = [
 // Dummy data generators for background transactions
 const FIRST_NAMES = ["James", "Maria", "David", "Sarah", "Michael", "Linda", "Robert", "Emma", "John", "Olivia"]
 const LAST_NAMES = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"]
-const CITIES = ["New York", "London", "Tokyo", "Mumbai", "Sydney", "Paris", "Berlin", "Toronto", "Dubai", "Singapore"]
+const CITIES = ["Mumbai", "Delhi", "Bengaluru", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Surat"]
 
 export function generateRandomTransaction(isBlock = false): Transaction {
-  const amount = Math.floor(Math.random() * 5000) + 10
+  const amount = Math.floor(Math.random() * 50000) + 1000
   const city = CITIES[Math.floor(Math.random() * CITIES.length)]
   const name = `${FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]} ${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]}`
   
@@ -166,9 +166,9 @@ export function generateRandomTransaction(isBlock = false): Transaction {
     return {
       txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
       amount: amount * 5, // High amount
-      currency: "USD",
+      currency: "INR",
       merchant: `Transfer to ${name}`,
-      location: "Kyiv (VPN)",
+      location: "Mumbai (VPN)",
       riskScore: Math.floor(Math.random() * 15) + 85, // 85-99
       action: "BLOCK",
       timestamp: Date.now()
@@ -179,7 +179,7 @@ export function generateRandomTransaction(isBlock = false): Transaction {
   return {
     txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
     amount,
-    currency: "USD",
+    currency: "INR",
     merchant: `Transfer to ${name}`,
     location: city,
     riskScore,

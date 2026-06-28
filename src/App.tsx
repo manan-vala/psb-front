@@ -13,13 +13,15 @@ import { ThreatMap } from "./components/ThreatMap"
 import { TransactionTable } from "./components/TransactionTable"
 import { useDemoEngine } from "./hooks/useDemoEngine"
 import { Shield } from "lucide-react"
+import { BobIconPrimary } from "./components/icons/bob-icon-primary"
+import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-primary"
 
 export default function App() {
   const { data, phase, history, transactions, stats, riskHistory, startDemo, resetDemo } = useDemoEngine()
 
   useEffect(() => {
-    // Force dark mode for the demo
-    document.documentElement.classList.add("dark")
+    // Remove dark mode for the demo
+    document.documentElement.classList.remove("dark")
   }, [])
 
   return (
@@ -28,11 +30,11 @@ export default function App() {
       <main className="min-h-screen bg-background p-4 text-foreground sm:p-6 pb-20 pt-8">
         <header className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-primary/20 p-2 rounded-lg text-primary">
-              <Shield className="size-6" />
+            <div className="bg-orange-500/10 p-1.5 rounded-lg text-primary flex items-center justify-center">
+              <BobIconPrimary className="w-10 h-auto" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">Bank Security Dashboard</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">Aegis</h1>
               <p className="text-sm font-medium text-muted-foreground mt-0.5">
                 Fraud Intelligence & Monitoring
               </p>
@@ -79,6 +81,10 @@ export default function App() {
           <AlertFeed history={history} />
           <TransactionTable transactions={transactions} />
         </div>
+
+        <footer className="mt-12 flex items-center justify-center pb-4 opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
+          <BobIconCaptionPrimary className="h-8 w-auto" />
+        </footer>
       </main>
     </>
   )

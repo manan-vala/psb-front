@@ -34,8 +34,8 @@ export function useDemoEngine() {
     if (transactions.length === 0) {
       const initialTx = INITIAL_HISTORY.map(h => ({
         txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-        amount: Math.floor(Math.random() * 500) + 10,
-        currency: "USD",
+        amount: Math.floor(Math.random() * 50000) + 1000,
+        currency: "INR",
         merchant: "Login/Session",
         location: "Various",
         riskScore: h.riskScore,
@@ -61,8 +61,8 @@ export function useDemoEngine() {
     
     const initialTx = INITIAL_HISTORY.map(h => ({
       txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-      amount: Math.floor(Math.random() * 500) + 10,
-      currency: "USD",
+      amount: Math.floor(Math.random() * 50000) + 1000,
+      currency: "INR",
       merchant: "Login/Session",
       location: "Various",
       riskScore: h.riskScore,

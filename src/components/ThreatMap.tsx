@@ -7,9 +7,9 @@ interface ThreatMapProps {
 }
 
 const PINGS = [
-  { id: "mumbai", cx: "68%", cy: "45%", delay: 0 },
-  { id: "london", cx: "48%", cy: "28%", delay: 1000 },
-  { id: "kyiv", cx: "55%", cy: "30%", delay: 2000 },
+  { id: "delhi", cx: "67%", cy: "38%", delay: 0 },
+  { id: "bengaluru", cx: "69%", cy: "52%", delay: 1000 },
+  { id: "mumbai", cx: "66%", cy: "45%", delay: 2000 },
 ]
 
 export function ThreatMap({ phase, data }: ThreatMapProps) {
@@ -62,7 +62,7 @@ export function ThreatMap({ phase, data }: ThreatMapProps) {
           >
             <div className="size-2 bg-destructive rounded-full relative z-10" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-2 bg-destructive rounded-full animate-[pingRing_1.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
-            {ping.id === "kyiv" && (
+            {ping.id === "mumbai" && (
                 <div className="absolute top-4 left-4 bg-destructive/10 border border-destructive/30 text-destructive text-[10px] px-2 py-0.5 rounded whitespace-nowrap fade-in-up">
                     VPN Detected
                 </div>

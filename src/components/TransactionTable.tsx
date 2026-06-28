@@ -40,7 +40,7 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                   <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{tx.txId}</td>
                   <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{formatTime(tx.timestamp)}</td>
                   <td className="px-4 py-2.5 text-right font-medium">
-                    ${tx.amount.toLocaleString()}
+                    ₹{tx.amount.toLocaleString("en-IN")}
                   </td>
                   <td className="px-4 py-2.5 text-muted-foreground truncate max-w-[120px]" title={tx.location}>
                     {tx.location}
