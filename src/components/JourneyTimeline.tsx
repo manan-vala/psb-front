@@ -43,15 +43,15 @@ export function JourneyTimeline({
           const anomalous = isAnomalous(sessionPath, dwellTimes, i)
 
           return (
-            <div key={i} className="flex flex-1 items-start">
+            <div key={i} className="flex flex-1 items-start fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
               {/* Node + label */}
               <div className="flex flex-col items-center">
                 <div
                   className={cn(
-                    "flex size-7 items-center justify-center rounded-full border-2 text-xs font-medium",
-                    isCurrent && "animate-pulse ring-2 ring-primary ring-offset-2",
+                    "flex size-7 items-center justify-center rounded-full border-2 text-xs font-bold transition-all",
+                    isCurrent && "ring-4 ring-primary/20",
                     anomalous
-                      ? "border-red-500 bg-red-500/20 text-red-600"
+                      ? "border-destructive bg-destructive/20 text-destructive animate-pulse"
                       : "border-primary bg-primary/10 text-primary",
                   )}
                 >
@@ -63,14 +63,14 @@ export function JourneyTimeline({
                 </div>
                 <span
                   className={cn(
-                    "mt-1 text-center text-xs font-medium",
-                    anomalous ? "text-red-500" : "text-foreground",
+                    "mt-2 text-center text-xs font-semibold",
+                    anomalous ? "text-destructive" : "text-foreground",
                   )}
                 >
                   {screen}
                 </span>
                 {dwellTimes[i] !== undefined && !isCurrent && (
-                  <span className="text-[10px] text-muted-foreground">
+                  <span className="text-[10px] font-medium text-muted-foreground mt-0.5 bg-muted px-1.5 py-0.5 rounded">
                     {(dwellTimes[i] / 1000).toFixed(1)}s
                   </span>
                 )}
@@ -80,8 +80,8 @@ export function JourneyTimeline({
               {!isLast && (
                 <div
                   className={cn(
-                    "mt-3.5 h-0.5 flex-1",
-                    anomalous ? "bg-red-400" : "bg-border",
+                    "mt-3.5 h-0.5 flex-1 transition-colors",
+                    anomalous ? "bg-destructive/50" : "bg-primary/30",
                   )}
                 />
               )}

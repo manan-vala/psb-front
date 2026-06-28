@@ -9,9 +9,9 @@ interface RiskGaugeProps {
 
 function scoreColor(score: number | null) {
   if (score === null) return "oklch(0.7 0 0)"
-  if (score <= 30) return "oklch(0.72 0.19 142)" // green
-  if (score <= 60) return "oklch(0.78 0.18 70)" // amber
-  return "oklch(0.65 0.22 27)" // red
+  if (score <= 30) return "var(--chart-2)" // green
+  if (score <= 60) return "var(--chart-3)" // amber
+  return "var(--chart-4)" // red
 }
 
 export function RiskGauge({ riskScore, action }: RiskGaugeProps) {
@@ -19,10 +19,13 @@ export function RiskGauge({ riskScore, action }: RiskGaugeProps) {
   const data = [{ value: score }]
 
   return (
-    <section className="flex h-full flex-col items-center justify-center rounded-xl border border-border bg-card p-4 text-center">
-      <p className="mb-2 text-sm text-muted-foreground">Identity Risk Score</p>
+    <section className="flex h-full flex-col items-center justify-center rounded-xl border border-border bg-card p-4 text-center relative overflow-hidden">
+      {riskScore !== null && riskScore > 80 && (
+        <div className="absolute inset-0 bg-destructive/5 animate-pulse pointer-events-none" />
+      )}
+      <p className="mb-2 text-sm text-muted-foreground z-10">Identity Risk Score</p>
       
-      <div className="relative">
+      <div className="relative z-10">
         <RadialBarChart
           width={200}
           height={200}
@@ -39,23 +42,28 @@ export function RiskGauge({ riskScore, action }: RiskGaugeProps) {
             tick={false}
           />
           <RadialBar
-            background={{ fill: "oklch(0.922 0 0)" }}
+            background={{ fill: "var(--input)" }}
             dataKey="value"
             angleAxisId={0}
             fill={scoreColor(riskScore)}
             cornerRadius={6}
+            isAnimationActive={true}
+            animationDuration={1500}
+            animationEasing="ease-out"
           />
         </RadialBarChart>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-4xl font-bold tabular-nums">
+        <div className="absolute inset-0 flex flex-col items-center justify-center drop-shadow-md">
+          <span className="text-5xl font-bold tabular-nums" style={{ color: scoreColor(riskScore) }}>
             {riskScore !== null ? Math.round(riskScore) : "—"}
           </span>
-          <span className="text-xs text-muted-foreground">/ 100</span>
+          <span className="text-xs text-muted-foreground mt-1">/ 100</span>
         </div>
       </div>
 
-      <SessionStatus action={action} />
+      <div className="z-10">
+        <SessionStatus action={action} />
+      </div>
     </section>
   )
 }
