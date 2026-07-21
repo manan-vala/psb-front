@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { io, type Socket } from "socket.io-client"
 
-import type { RiskUpdate, HighValuePayment, Transaction } from "@/types/risk"
+import type { RiskUpdate, HighValuePayment, Transaction, RiskAction } from "@/types/risk"
 import type { Stats } from "./useDemoEngine"
 
 const MAX_HISTORY = 50
@@ -56,7 +56,7 @@ export function useWebSocket() {
       setHighValuePayments((prev) => [payload, ...prev])
       
       const riskScore = 85
-      const action = "STEP_UP"
+      let action: RiskAction = "STEP_UP"
       
       const newTx: Transaction = {
         txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
@@ -73,8 +73,8 @@ export function useWebSocket() {
       
       setLiveStats((s) => {
         const newTotal = s.total + 1
-        const newFlagged = action === "STEP_UP" ? s.flagged + 1 : s.flagged
-        const newBlocked = action === "BLOCK" ? s.blocked + 1 : s.blocked
+        const newFlagged = (action as string) === "STEP_UP" ? s.flagged + 1 : s.flagged
+        const newBlocked = (action as string) === "BLOCK" ? s.blocked + 1 : s.blocked
         const newAvgRisk = Math.round((s.avgRisk * s.total + riskScore) / newTotal)
         return { total: newTotal, flagged: newFlagged, blocked: newBlocked, avgRisk: newAvgRisk }
       })

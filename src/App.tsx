@@ -20,7 +20,7 @@ import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-prima
 
 export default function App() {
   const { data: demoData, phase, history: demoHistory, transactions: demoTx, stats: demoStats, riskHistory, startDemo, resetDemo } = useDemoEngine()
-  const { highValuePayments, liveStats, liveTransactions, connected, data: liveData, history: liveHistory } = useWebSocket()
+  const { highValuePayments, liveStats, liveTransactions, data: liveData, history: liveHistory } = useWebSocket()
 
   const displayStats = liveTransactions.length > 0 ? liveStats : demoStats
   const displayTransactions = liveTransactions.length > 0 ? liveTransactions : demoTx
