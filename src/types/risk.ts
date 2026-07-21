@@ -29,3 +29,10 @@ export interface Transaction {
   action: RiskAction
   timestamp: number
 }
+
+export interface HighValuePayment {
+  amount: number
+  payee: string
+  timestamp: number
+  flag: string
+}

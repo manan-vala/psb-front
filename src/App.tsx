@@ -11,13 +11,21 @@ import { LiveActivityBar } from "./components/LiveActivityBar"
 import { RiskTrendChart } from "./components/RiskTrendChart"
 import { ThreatMap } from "./components/ThreatMap"
 import { TransactionTable } from "./components/TransactionTable"
+import { HighValueAlert } from "./components/HighValueAlert"
 import { useDemoEngine } from "./hooks/useDemoEngine"
+import { useWebSocket } from "./hooks/useWebSocket"
 // import { Shield } from "lucide-react"
 import { BobIconPrimary } from "./components/icons/bob-icon-primary"
 import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-primary"
 
 export default function App() {
-  const { data, phase, history, transactions, stats, riskHistory, startDemo, resetDemo } = useDemoEngine()
+  const { data: demoData, phase, history: demoHistory, transactions: demoTx, stats: demoStats, riskHistory, startDemo, resetDemo } = useDemoEngine()
+  const { highValuePayments, liveStats, liveTransactions, connected, data: liveData, history: liveHistory } = useWebSocket()
+
+  const displayStats = liveTransactions.length > 0 ? liveStats : demoStats
+  const displayTransactions = liveTransactions.length > 0 ? liveTransactions : demoTx
+  const displayData = liveData || demoData
+  const displayHistory = liveHistory.length > 0 ? liveHistory : demoHistory
 
   useEffect(() => {
     // Remove dark mode for the demo
@@ -48,23 +56,29 @@ export default function App() {
           />
         </header>
 
-        <StatsBanner stats={stats} />
+        <div className="flex flex-col gap-4 mb-6">
+          {highValuePayments.map((payment, i) => (
+            <HighValueAlert key={i} payment={payment} />
+          ))}
+        </div>
+
+        <StatsBanner stats={displayStats} />
 
         <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-4 h-[350px]">
           <div className="lg:col-span-1 h-full">
             <RiskGauge
-              riskScore={data?.riskScore ?? null}
-              action={data?.action ?? null}
+              riskScore={displayData?.riskScore ?? null}
+              action={displayData?.action ?? null}
             />
           </div>
           <div className="lg:col-span-1 h-full">
             <EngineScores
-              engines={data?.engines ?? null}
-              flags={data?.flags ?? []}
+              engines={displayData?.engines ?? null}
+              flags={displayData?.flags ?? []}
             />
           </div>
           <div className="lg:col-span-2 h-full">
-            <ThreatMap phase={phase} data={data} />
+            <ThreatMap phase={phase} data={displayData} />
           </div>
         </div>
 
@@ -72,14 +86,14 @@ export default function App() {
 
         <div className="mb-6">
           <JourneyTimeline
-            sessionPath={data?.sessionPath ?? []}
-            dwellTimes={data?.dwellTimes ?? []}
+            sessionPath={displayData?.sessionPath ?? []}
+            dwellTimes={displayData?.dwellTimes ?? []}
           />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <AlertFeed history={history} />
-          <TransactionTable transactions={transactions} />
+          <AlertFeed history={displayHistory} />
+          <TransactionTable transactions={displayTransactions} />
         </div>
 
         <footer className="mt-12 flex items-center justify-center pb-4 opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
