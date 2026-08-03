@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react"
 import type { RiskUpdate, Transaction, DemoPhase } from "@/types/risk"
-import { DEMO_EVENTS, INITIAL_HISTORY, generateRandomTransaction } from "@/data/demoScript"
+import { DEMO_EVENTS, INITIAL_HISTORY, generateRandomTransaction } from "./demoScript"
 
 export interface Stats {
   total: number
@@ -32,7 +32,7 @@ export function useDemoEngine() {
   // Initial population of transactions based on history
   useEffect(() => {
     if (transactions.length === 0) {
-      const initialTx = INITIAL_HISTORY.map(h => ({
+      const initialTx = INITIAL_HISTORY.map((h: any) => ({
         txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
         amount: Math.floor(Math.random() * 50000) + 1000,
         currency: "INR",
@@ -44,7 +44,7 @@ export function useDemoEngine() {
       }))
       setTransactions(initialTx)
       
-      const initialRisk = INITIAL_HISTORY.map(h => ({
+      const initialRisk = INITIAL_HISTORY.map((h: any) => ({
         time: h.timestamp,
         score: h.riskScore
       }))
@@ -59,7 +59,7 @@ export function useDemoEngine() {
     setHistory(INITIAL_HISTORY)
     setStats({ total: 1450, flagged: 24, blocked: 3, avgRisk: 12 })
     
-    const initialTx = INITIAL_HISTORY.map(h => ({
+    const initialTx = INITIAL_HISTORY.map((h: any) => ({
       txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
       amount: Math.floor(Math.random() * 50000) + 1000,
       currency: "INR",
@@ -71,7 +71,7 @@ export function useDemoEngine() {
     }))
     setTransactions(initialTx)
     
-    const initialRisk = INITIAL_HISTORY.map(h => ({
+    const initialRisk = INITIAL_HISTORY.map((h: any) => ({
       time: h.timestamp,
       score: h.riskScore
     }))
@@ -100,7 +100,7 @@ export function useDemoEngine() {
       setPhase("LIVE")
       
       // Schedule all demo events
-      DEMO_EVENTS.forEach(({ delay, event }) => {
+      DEMO_EVENTS.forEach(({ delay, event }: { delay: number, event: any }) => {
         const t = setTimeout(() => {
           const timestamp = Date.now()
           const eventWithTime = { ...event, timestamp }

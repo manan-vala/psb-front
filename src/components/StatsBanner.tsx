@@ -1,4 +1,4 @@
-import type { Stats } from "@/hooks/useDemoEngine"
+import type { Stats } from "@/types/risk"
 
 export function StatsBanner({ stats }: { stats: Stats }) {
   const formatNumber = (num: number) => num.toLocaleString()

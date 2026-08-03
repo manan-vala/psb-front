@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { io, type Socket } from "socket.io-client"
 
-import type { RiskUpdate, HighValuePayment, Transaction, RiskAction } from "@/types/risk"
-import type { Stats } from "./useDemoEngine"
+import type { RiskUpdate, HighValuePayment, Transaction, RiskAction, Stats } from "@/types/risk"
 
 const MAX_HISTORY = 50
 
@@ -12,8 +11,9 @@ export function useWebSocket() {
   const [connected, setConnected] = useState(false)
   const [history, setHistory] = useState<RiskUpdate[]>([])
   const [highValuePayments, setHighValuePayments] = useState<HighValuePayment[]>([])
+  const [riskHistory, setRiskHistory] = useState<{ time: number, score: number }[]>([])
   
-  const [liveStats, setLiveStats] = useState<Stats>({ total: 1450, flagged: 24, blocked: 3, avgRisk: 12 })
+  const [liveStats, setLiveStats] = useState<Stats>({ total: 0, flagged: 0, blocked: 0, avgRisk: 0 })
   const [liveTransactions, setLiveTransactions] = useState<Transaction[]>([])
 
   useEffect(() => {
@@ -30,6 +30,8 @@ export function useWebSocket() {
       setData(payload)
       setHistory((previous) => [payload, ...previous].slice(0, MAX_HISTORY))
       
+      setRiskHistory(prev => [...prev, { time: payload.timestamp, score: payload.riskScore }].slice(-20))
+
       const newTx: Transaction = {
         txId: `TXN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
         amount: Math.floor(Math.random() * 50000) + 1000,
@@ -86,5 +88,5 @@ export function useWebSocket() {
     }
   }, [])
 
-  return { data, connected, history, highValuePayments, liveStats, liveTransactions }
+  return { data, connected, history, highValuePayments, liveStats, liveTransactions, riskHistory }
 }

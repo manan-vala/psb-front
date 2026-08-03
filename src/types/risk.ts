@@ -19,6 +19,13 @@ export interface RiskUpdate {
   timestamp: number
 }
 
+export interface Stats {
+  total: number
+  flagged: number
+  blocked: number
+  avgRisk: number
+}
+
 export interface Transaction {
   txId: string
   amount: number

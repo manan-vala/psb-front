@@ -5,27 +5,21 @@ import { AlertFeed } from "./components/AlertFeed"
 import { EngineScores } from "./components/EngineScores"
 import { JourneyTimeline } from "./components/JourneyTimeline"
 import { RiskGauge } from "./components/RiskGauge"
-import { DemoConnectButton } from "./components/DemoConnectButton"
 import { StatsBanner } from "./components/StatsBanner"
 import { LiveActivityBar } from "./components/LiveActivityBar"
 import { RiskTrendChart } from "./components/RiskTrendChart"
 import { ThreatMap } from "./components/ThreatMap"
 import { TransactionTable } from "./components/TransactionTable"
 import { HighValueAlert } from "./components/HighValueAlert"
-import { useDemoEngine } from "./hooks/useDemoEngine"
 import { useWebSocket } from "./hooks/useWebSocket"
 // import { Shield } from "lucide-react"
 import { BobIconPrimary } from "./components/icons/bob-icon-primary"
 import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-primary"
 
 export default function App() {
-  const { data: demoData, phase, history: demoHistory, transactions: demoTx, stats: demoStats, riskHistory, startDemo, resetDemo } = useDemoEngine()
-  const { highValuePayments, liveStats, liveTransactions, data: liveData, history: liveHistory } = useWebSocket()
+  const { highValuePayments, liveStats, liveTransactions, data, history, riskHistory, connected } = useWebSocket()
 
-  const displayStats = liveTransactions.length > 0 ? liveStats : demoStats
-  const displayTransactions = liveTransactions.length > 0 ? liveTransactions : demoTx
-  const displayData = liveData || demoData
-  const displayHistory = liveHistory.length > 0 ? liveHistory : demoHistory
+  const phase = connected ? "LIVE" : "CONNECTING"
 
   useEffect(() => {
     // Remove dark mode for the demo
@@ -48,12 +42,6 @@ export default function App() {
               </p>
             </div>
           </div>
-          
-          <DemoConnectButton 
-            phase={phase}
-            onStart={startDemo}
-            onReset={resetDemo}
-          />
         </header>
 
         <div className="flex flex-col gap-4 mb-6">
@@ -62,23 +50,23 @@ export default function App() {
           ))}
         </div>
 
-        <StatsBanner stats={displayStats} />
+        <StatsBanner stats={liveStats} />
 
         <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-4 h-[350px]">
           <div className="lg:col-span-1 h-full">
             <RiskGauge
-              riskScore={displayData?.riskScore ?? null}
-              action={displayData?.action ?? null}
+              riskScore={data?.riskScore ?? null}
+              action={data?.action ?? null}
             />
           </div>
           <div className="lg:col-span-1 h-full">
             <EngineScores
-              engines={displayData?.engines ?? null}
-              flags={displayData?.flags ?? []}
+              engines={data?.engines ?? null}
+              flags={data?.flags ?? []}
             />
           </div>
           <div className="lg:col-span-2 h-full">
-            <ThreatMap phase={phase} data={displayData} />
+            <ThreatMap phase={phase} data={data} />
           </div>
         </div>
 
@@ -86,14 +74,14 @@ export default function App() {
 
         <div className="mb-6">
           <JourneyTimeline
-            sessionPath={displayData?.sessionPath ?? []}
-            dwellTimes={displayData?.dwellTimes ?? []}
+            sessionPath={data?.sessionPath ?? []}
+            dwellTimes={data?.dwellTimes ?? []}
           />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <AlertFeed history={displayHistory} />
-          <TransactionTable transactions={displayTransactions} />
+          <AlertFeed history={history} />
+          <TransactionTable transactions={liveTransactions} />
         </div>
 
         <footer className="mt-12 flex items-center justify-center pb-4 opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
