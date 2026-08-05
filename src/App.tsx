@@ -11,13 +11,14 @@ import { RiskTrendChart } from "./components/RiskTrendChart"
 import { ThreatMap } from "./components/ThreatMap"
 import { TransactionTable } from "./components/TransactionTable"
 import { HighValueAlert } from "./components/HighValueAlert"
+import { SecuritySignalBanner } from "./components/SecuritySignalBanner"
 import { useWebSocket } from "./hooks/useWebSocket"
 // import { Shield } from "lucide-react"
 import { BobIconPrimary } from "./components/icons/bob-icon-primary"
 import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-primary"
 
 export default function App() {
-  const { highValuePayments, liveStats, liveTransactions, data, history, riskHistory, connected } = useWebSocket()
+  const { highValuePayments, securitySignals, liveStats, liveTransactions, data, history, riskHistory, connected } = useWebSocket()
 
   const phase = connected ? "LIVE" : "CONNECTING"
 
@@ -45,6 +46,9 @@ export default function App() {
         </header>
 
         <div className="flex flex-col gap-4 mb-6">
+          {securitySignals.map((signal, i) => (
+            <SecuritySignalBanner key={`sec-${i}`} signal={signal} />
+          ))}
           {highValuePayments.map((payment, i) => (
             <HighValueAlert key={i} payment={payment} />
           ))}

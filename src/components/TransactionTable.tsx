@@ -42,8 +42,8 @@ export function TransactionTable({ transactions }: { transactions: Transaction[]
                   <td className="px-4 py-2.5 text-right font-medium">
                     ₹{tx.amount.toLocaleString("en-IN")}
                   </td>
-                  <td className="px-4 py-2.5 text-muted-foreground truncate max-w-[120px]" title={tx.location}>
-                    {tx.location}
+                  <td className="px-4 py-2.5 text-muted-foreground truncate max-w-[120px]" title={tx.payee || tx.merchant}>
+                    {tx.payee || tx.merchant}
                   </td>
                   <td className="px-4 py-2.5 text-center">
                     <span className={cn(

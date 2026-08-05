@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { io, type Socket } from "socket.io-client"
 
-import type { RiskUpdate, HighValuePayment, Transaction, RiskAction, Stats } from "@/types/risk"
+import type { RiskUpdate, HighValuePayment, Transaction, RiskAction, Stats, TransactionCompleted, SecuritySignal } from "@/types/risk"
 
 const MAX_HISTORY = 50
 
@@ -12,6 +12,7 @@ export function useWebSocket() {
   const [history, setHistory] = useState<RiskUpdate[]>([])
   const [highValuePayments, setHighValuePayments] = useState<HighValuePayment[]>([])
   const [riskHistory, setRiskHistory] = useState<{ time: number, score: number }[]>([])
+  const [securitySignals, setSecuritySignals] = useState<SecuritySignal[]>([])
   
   const [liveStats, setLiveStats] = useState<Stats>({ total: 0, flagged: 0, blocked: 0, avgRisk: 0 })
   const [liveTransactions, setLiveTransactions] = useState<Transaction[]>([])
@@ -82,11 +83,53 @@ export function useWebSocket() {
       })
     })
 
+    socket.on("transaction_completed", (payload: TransactionCompleted) => {
+      const newTx: Transaction = {
+        txId: payload.txId,
+        amount: payload.amount,
+        currency: payload.currency,
+        merchant: payload.payee,
+        payee: payload.payee,
+        location: payload.location,
+        riskScore: payload.riskScore,
+        action: payload.action,
+        timestamp: payload.timestamp
+      }
+      
+      setLiveTransactions((prev) => [newTx, ...prev].slice(0, 50))
+      
+      setLiveStats((s) => {
+        const newTotal = s.total + 1
+        const newFlagged = payload.action === "STEP_UP" ? s.flagged + 1 : s.flagged
+        const newBlocked = payload.action === "BLOCK" ? s.blocked + 1 : s.blocked
+        const newAvgRisk = Math.round((s.avgRisk * s.total + payload.riskScore) / newTotal)
+        return { total: newTotal, flagged: newFlagged, blocked: newBlocked, avgRisk: newAvgRisk }
+      })
+    })
+
+    socket.on("security_signal", (payload: SecuritySignal) => {
+      setSecuritySignals((prev) => [payload, ...prev].slice(0, 5))
+      
+      const asRiskUpdate: RiskUpdate = {
+        riskScore: payload.riskScore,
+        action: payload.action,
+        engines: { network: 100, device: 100, behavior: 100, journey: 100, ...payload.engines },
+        flags: payload.flags,
+        sessionPath: payload.sessionPath,
+        dwellTimes: payload.dwellTimes,
+        explanation: payload.explanation,
+        timestamp: payload.timestamp
+      }
+      
+      setHistory((previous) => [asRiskUpdate, ...previous].slice(0, MAX_HISTORY))
+      setRiskHistory(prev => [...prev, { time: payload.timestamp, score: payload.riskScore }].slice(-20))
+    })
+
     return () => {
       socket.disconnect()
       socketRef.current = null
     }
   }, [])
 
-  return { data, connected, history, highValuePayments, liveStats, liveTransactions, riskHistory }
+  return { data, connected, history, highValuePayments, securitySignals, liveStats, liveTransactions, riskHistory }
 }

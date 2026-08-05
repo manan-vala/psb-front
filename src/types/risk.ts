@@ -31,6 +31,7 @@ export interface Transaction {
   amount: number
   currency: string
   merchant: string
+  payee?: string
   location: string
   riskScore: number
   action: RiskAction
@@ -42,4 +43,27 @@ export interface HighValuePayment {
   payee: string
   timestamp: number
   flag: string
+}
+
+export interface TransactionCompleted {
+  txId: string
+  amount: number
+  payee: string
+  currency: string
+  riskScore: number
+  action: RiskAction
+  timestamp: number
+  location: string
+}
+
+export interface SecuritySignal {
+  type: 'WARNING' | 'CRITICAL'
+  flags: string[]
+  explanation: string
+  engines: Partial<RiskEngines>
+  riskScore: number
+  action: RiskAction
+  timestamp: number
+  sessionPath: string[]
+  dwellTimes: number[]
 }
