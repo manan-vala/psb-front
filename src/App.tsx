@@ -1,26 +1,38 @@
 import { useEffect } from "react"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+
 import "./App.css"
 
-import { AlertFeed } from "./components/AlertFeed"
-import { EngineScores } from "./components/EngineScores"
-import { JourneyTimeline } from "./components/JourneyTimeline"
-import { RiskGauge } from "./components/RiskGauge"
-import { StatsBanner } from "./components/StatsBanner"
-import { LiveActivityBar } from "./components/LiveActivityBar"
-import { RiskTrendChart } from "./components/RiskTrendChart"
-import { ThreatMap } from "./components/ThreatMap"
-import { TransactionTable } from "./components/TransactionTable"
-import { HighValueAlert } from "./components/HighValueAlert"
-import { SecuritySignalBanner } from "./components/SecuritySignalBanner"
-import { useWebSocket } from "./hooks/useWebSocket"
-// import { Shield } from "lucide-react"
-import { BobIconPrimary } from "./components/icons/bob-icon-primary"
-import { BobIconCaptionPrimary } from "./components/icons/bob-icon-caption-primary"
+import { ConsoleLayout } from "@/layouts/ConsoleLayout"
+import { DevicesPage } from "@/pages/DevicesPage"
+import { LiveFeedPage } from "@/pages/LiveFeedPage"
+import { OnboardingPage } from "@/pages/OnboardingPage"
+import { SessionsPage } from "@/pages/SessionsPage"
+import { useOnboardingQueue } from "@/hooks/useOnboardingQueue"
+import { useWebSocket } from "@/hooks/useWebSocket"
 
+/**
+ * Aegis — the bank analyst security console.
+ *
+ * The app grew from a single page into a routed console; see
+ * DEMO-IMPLEMENTATION-PLAN.md §6. Two things are deliberately held at this
+ * level rather than inside the pages:
+ *
+ *   - **The socket connection.** `useWebSocket` accumulates stats, history and
+ *     the risk trend in local state as events arrive. Mounting it inside the
+ *     feed page would reset all of that every time the analyst navigated to
+ *     the onboarding queue and back, and would drop the connection while they
+ *     were away.
+ *   - **The onboarding queue poll**, because the sidebar badge needs the
+ *     pending count on every route, not just `/onboarding`.
+ */
 export default function App() {
-  const { highValuePayments, securitySignals, liveStats, liveTransactions, data, history, riskHistory, connected } = useWebSocket()
+  const feed = useWebSocket()
 
-  const phase = connected ? "LIVE" : "CONNECTING"
+  // Slower than the queue page's own poll: this one only feeds a badge, so
+  // there's no reason for it to be as responsive as the table someone is
+  // actually looking at.
+  const { data: queue } = useOnboardingQueue("PENDING", 8000)
 
   useEffect(() => {
     // Remove dark mode for the demo
@@ -28,70 +40,17 @@ export default function App() {
   }, [])
 
   return (
-    <>
-      <LiveActivityBar phase={phase} />
-      <main className="min-h-screen bg-background p-4 text-foreground sm:p-6 pb-20 pt-8">
-        <header className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-orange-500/10 p-2 rounded-lg text-primary flex items-center justify-center">
-              <BobIconPrimary className="w-14 h-auto" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">Aegis</h1>
-              <p className="text-sm font-medium text-muted-foreground mt-0.5">
-                Fraud Intelligence & Monitoring
-              </p>
-            </div>
-          </div>
-        </header>
-
-        <div className="flex flex-col gap-4 mb-6">
-          {securitySignals.map((signal, i) => (
-            <SecuritySignalBanner key={`sec-${i}`} signal={signal} />
-          ))}
-          {highValuePayments.map((payment, i) => (
-            <HighValueAlert key={i} payment={payment} />
-          ))}
-        </div>
-
-        <StatsBanner stats={liveStats} />
-
-        <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-4 h-[350px]">
-          <div className="lg:col-span-1 h-full">
-            <RiskGauge
-              riskScore={data?.riskScore ?? null}
-              action={data?.action ?? null}
-            />
-          </div>
-          <div className="lg:col-span-1 h-full">
-            <EngineScores
-              engines={data?.engines ?? null}
-              flags={data?.flags ?? []}
-            />
-          </div>
-          <div className="lg:col-span-2 h-full">
-            <ThreatMap phase={phase} data={data} />
-          </div>
-        </div>
-
-        <RiskTrendChart data={riskHistory} />
-
-        <div className="mb-6">
-          <JourneyTimeline
-            sessionPath={data?.sessionPath ?? []}
-            dwellTimes={data?.dwellTimes ?? []}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <AlertFeed history={history} />
-          <TransactionTable transactions={liveTransactions} />
-        </div>
-
-        <footer className="mt-12 flex items-center justify-center pb-4 opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
-          <BobIconCaptionPrimary className="h-8 w-auto" />
-        </footer>
-      </main>
-    </>
+    <BrowserRouter>
+      <ConsoleLayout connected={feed.connected} pendingCount={queue?.pendingCount ?? 0}>
+        <Routes>
+          <Route path="/" element={<LiveFeedPage {...feed} />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/devices" element={<DevicesPage />} />
+          <Route path="/sessions" element={<SessionsPage />} />
+          {/* Unknown URL falls back to the feed rather than a blank screen. */}
+          <Route path="*" element={<LiveFeedPage {...feed} />} />
+        </Routes>
+      </ConsoleLayout>
+    </BrowserRouter>
   )
 }
