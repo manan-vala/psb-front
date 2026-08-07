@@ -4,7 +4,7 @@ export function StatsBanner({ stats }: { stats: Stats }) {
   const formatNumber = (num: number) => num.toLocaleString()
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mb-6">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
         <p className="text-sm text-muted-foreground">Transactions Analyzed</p>
         <p className="mt-2 text-2xl font-semibold tracking-tight">{formatNumber(stats.total)}</p>

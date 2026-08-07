@@ -1,4 +1,4 @@
-import { SecuritySignal } from "@/types/risk"
+import type { SecuritySignal } from "@/types/risk"
 import { AlertTriangle, ShieldAlert } from "lucide-react"
 
 interface SecuritySignalBannerProps {
@@ -31,7 +31,7 @@ export function SecuritySignalBanner({ signal }: SecuritySignalBannerProps) {
   }
 
   return (
-    <div className={`mb-4 flex gap-4 rounded-xl border p-4 shadow-sm fade-in-up ${colorClass}`}>
+    <div className={`flex gap-4 rounded-xl border p-4 shadow-sm fade-in-up ${colorClass}`}>
       {icon}
       <div className="flex-1">
         <h3 className="font-semibold">{title}</h3>

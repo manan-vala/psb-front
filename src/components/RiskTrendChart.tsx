@@ -12,7 +12,7 @@ export function RiskTrendChart({ data }: RiskTrendChartProps) {
   }))
 
   return (
-    <div className="rounded-xl border border-border bg-card p-4 h-48 w-full mb-4">
+    <div className="rounded-xl border border-border bg-card p-4 h-48 w-full">
       <p className="text-sm text-muted-foreground mb-4">Risk Score Trend</p>
       
       <div className="h-32 w-full">
